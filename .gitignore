@@ -1,2 +1,3 @@
 _env/*
 src/__pycache__/*
+data/*

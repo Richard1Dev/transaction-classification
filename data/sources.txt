@@ -1,4 +1,0 @@
-https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud?select=creditcard.csv
-https://www.kaggle.com/datasets/ealaxi/paysim1
-https://www.kaggle.com/datasets/goyaladi/fraud-detection-dataset?select=Data
-https://www.kaggle.com/competitions/ieee-fraud-detection/data?select=sample_submission.csv
