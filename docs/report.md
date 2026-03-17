@@ -40,6 +40,56 @@ The model is serialised and ready for integration. I recommend:
 2.  **Monitoring:** Monthly re-evaluation of the AUPRC is advised to detect "Concept Drift" as fraudsters change their tactics.
 
 ## 7. Future Improvements
-1.  **Hyperparameter Tuning:** Implementing `GridSearchCV` or `Optuna` within the pipeline to fine-tune the XGBoost parameters (e.g. `learning_rate` and `max_depth`).
-2.  **Anomaly Detection:** Layering in an isolation forest or one-class SVM specifically for "zero-day" fraud types that do not resemble historical examples.
-3.  **Deployment:** Packaging the `src/` folder into a Docker container or a FastAPI endpoint for real-time transaction scoring.
+
+To further enhance the robustness, interpretability, and real-world applicability of the fraud detection system, the following improvements are recommended:
+
+1. **Threshold Optimisation:**
+   Replace the default 0.5 decision threshold with an optimised value based on business objectives. This can be achieved by maximising F1 score or enforcing a minimum precision/recall constraint using the Precision-Recall curve. Reporting performance at this optimal threshold will provide a more realistic view of operational effectiveness.
+
+2. **Advanced Evaluation Metrics:**
+   Extend evaluation beyond AUPRC by incorporating:
+
+   * Confusion matrices for clear visibility into false positives and false negatives
+   * Precision@K to simulate real-world fraud investigation queues (e.g. top 100 flagged transactions)
+   * Baseline comparison using the fraud rate to contextualise PR-AUC performance
+
+3. **Hyperparameter Optimisation:**
+   Integrate `GridSearchCV`, `RandomizedSearchCV`, or a framework such as Optuna within the pipeline to systematically tune model parameters (e.g. `learning_rate`, `max_depth`, `n_estimators`) while preserving the no-leakage design.
+
+4. **Model Calibration:**
+   Apply probability calibration techniques (e.g. Platt scaling or isotonic regression via `CalibratedClassifierCV`) to ensure predicted probabilities reflect true likelihoods, which is critical for threshold-based decision systems.
+
+5. **Explainability and Model Transparency:**
+   Introduce model interpretability using:
+
+   * Feature importance from the final ensemble model
+   * SHAP (SHapley Additive exPlanations) for both global feature influence and local transaction-level explanations
+     This is particularly important in financial systems requiring auditability.
+
+6. **Temporal Validation Strategy:**
+   Replace random train-test splitting with a time-based split to better simulate real-world deployment conditions, where models are trained on past data and evaluated on future transactions.
+
+7. **Concept Drift and Data Monitoring:**
+   Implement monitoring mechanisms to detect distributional shifts over time, such as:
+
+   * Population Stability Index (PSI)
+   * Feature distribution tracking
+     This ensures continued model reliability as fraud patterns evolve.
+
+8. **Cost-Sensitive Evaluation:**
+   Incorporate a business-driven cost framework that assigns explicit penalties to false negatives (missed fraud) and false positives (customer friction). This allows optimisation of the model based on financial impact rather than abstract metrics alone.
+
+9. **Anomaly Detection Layer:**
+   Augment the supervised model with unsupervised techniques such as Isolation Forest or One-Class SVM to identify previously unseen ("zero-day") fraud patterns that deviate from historical behaviour.
+
+10. **Deployment and Inference Layer:**
+    Package the trained pipeline into a production-ready service using FastAPI or Docker. The inference layer should:
+
+    * Accept raw transaction inputs
+    * Apply the full preprocessing pipeline
+    * Output calibrated fraud probabilities with a configurable decision threshold
+
+11. **Experiment Tracking and Configuration Management:**
+    Introduce structured experiment tracking (e.g. logging metrics, parameters, and model versions) and externalise model configurations into YAML/JSON files to improve reproducibility and maintainability.
+
+Collectively, these enhancements transition the project from a strong experimental pipeline to a production-grade fraud detection system aligned with real-world financial risk management requirements.
