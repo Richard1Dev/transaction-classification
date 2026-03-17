@@ -8,6 +8,7 @@ I conducted a detailed analysis to understand the underlying patterns of fraudul
 * **Feature Importance:** Latent features derived from PCA (V17, V14, and V12) showed the strongest correlation with fraudulent behaviour. Visual separation in these features is documented in the `figures/` directory.
 * **Transaction Amount:** Fraudulent transactions often exhibit skewed distributions, including $0.00 "ping" attempts, necessitating robust normalisation.
 * **Temporal Patterns:** Fraudulent activity does not strictly follow the diurnal cycles of genuine users, appearing more consistently across a 24-hour period.
+* **Class Imbalance:** Accuracy is misleading here. A trivial baseline model that predicts every transaction as genuine would achieve about 99.83% accuracy, while completely failing to detect any fraudulent cases.
 
 ## 3. Data Engineering & Pipeline Design
 To ensure the model generalises to real-world data without bias, I implemented a strict "No-Leakage" architecture:
