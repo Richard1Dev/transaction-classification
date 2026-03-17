@@ -2,31 +2,37 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 import os
-from sklearn.metrics import precision_recall_curve, auc, f1_score
+from sklearn.metrics import precision_recall_curve, auc, f1_score, precision_score, recall_score
 from sklearn.model_selection import train_test_split
 
 def evaluate_model(y_test, y_scores, model_name="Model", filename=None):
     """
     Comprehensive evaluation for imbalanced fraud data.
     
-    y_scores should be probabilities or decision function outputs.
-    If a filename is provided, I save the plot to the '../figures/' directory.
+    Now prints Precision and Recall at the default 0.5 threshold 
+    in addition to AUPRC and F1.
     """
-    precision, recall, _ = precision_recall_curve(y_test, y_scores)
-    auprc = auc(recall, precision)
+    # 1. Calculate values for the PR Curve (AUPRC)
+    precision_curve, recall_curve, _ = precision_recall_curve(y_test, y_scores)
+    auprc = auc(recall_curve, precision_curve)
     
-    # Calculate a standard F1 at the default threshold (0.5)
+    # 2. Calculate point-in-time metrics at 0.5 threshold
     y_pred = [1 if x >= 0.5 else 0 for x in y_scores]
     f1 = f1_score(y_test, y_pred)
+    prec = precision_score(y_test, y_pred)
+    rec = recall_score(y_test, y_pred)
     
+    # 3. Print Results
     print(f"\n--- {model_name} Results ---")
     print(f"AUPRC: {auprc:.4f}")
-    print(f"F1 Score (at 0.5): {f1:.4f}")
+    print(f"F1 Score:  {f1:.4f}")
+    print(f"Precision: {prec:.4f} (Accuracy of Alarms)")
+    print(f"Recall:    {rec:.4f} (Detection Rate)")
     
-    # Plotting Logic
+    # 4. Plotting Logic
     plt.figure(figsize=(8, 5))
-    plt.plot(recall, precision, label=f'{model_name} AUC={auprc:.4f}')
-    plt.fill_between(recall, precision, alpha=0.1)
+    plt.plot(recall_curve, precision_curve, label=f'{model_name} AUC={auprc:.4f}')
+    plt.fill_between(recall_curve, precision_curve, alpha=0.1)
     plt.title(f'Precision-Recall Curve: {model_name}')
     plt.xlabel('Recall (Detection Rate)')
     plt.ylabel('Precision (Accuracy of Alarms)')
@@ -34,7 +40,6 @@ def evaluate_model(y_test, y_scores, model_name="Model", filename=None):
     plt.grid(alpha=0.3)
     
     if filename:
-        # Create directory if it does not exist
         os.makedirs('../figures', exist_ok=True)
         save_path = os.path.join('../figures', filename)
         plt.savefig(save_path, bbox_inches='tight')
