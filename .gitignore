@@ -1,3 +1,4 @@
 _env/*
 src/__pycache__/*
 data/*
+!data/*.txt
