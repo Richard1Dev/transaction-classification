@@ -1,0 +1,12 @@
+# Data Manipulation
+pandas
+numpy
+
+# Visualisation
+matplotlib
+seaborn
+
+# Machine Learning & Pipelines
+scikit-learn
+xgboost
+imbalanced-learn
