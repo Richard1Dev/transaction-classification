@@ -1,4 +1,4 @@
-# Credit Card Fraud Detection
+# Credit Card Transaction Classifier
 
 A machine learning pipeline designed to identify fraudulent transactions with high precision and recall. This project focuses on handling extreme class imbalance and preventing data leakage through a robust pipeline architecture.
 
